@@ -1,47 +1,155 @@
+import { useState, useRef } from 'react';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
 function App() {
+  const [markdown, setMarkdown] = useState(`# Bienvenido al Visor Markdown
+
+Escribe tu contenido aqui...
+
+## Caracteristicas
+
+Convierte Markdown a **HTML** en tiempo real.
+
+- Vista previa instantanea
+- Proteccion contra XSS
+- Interfaz intuitiva
+- Y algo mas
+
+> Cita de ejemplo con estilo
+
+\`\`\`javascript
+const html = marked(markdown);
+\`\`\`
+
+[Ver documentacion](https://ejemplo.com)`);
+
+  const textareaRef = useRef(null);
+
+  const insertText = (before, after = '') => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = markdown.substring(start, end);
+    const newText = before + selectedText + after;
+    const newMarkdown = markdown.substring(0, start) + newText + markdown.substring(end);
+    setMarkdown(newMarkdown);
+
+    // Set cursor position after insertion
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
+    }, 0);
+  };
+
+  const convertToHTML = () => {
+    const rawHtml = marked(markdown);
+    return DOMPurify.sanitize(rawHtml);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-cyan-600 text-white p-4">
-        <h1 className="text-xl font-bold" align="center">Markdown to HTML</h1>
-      </header>
-      
-      <main className="flex-grow p-8">
-        <div className="mb-6" align="right">
-          <input type="button" value="Convert to HTML" className="px-4 py-2 bg-cyan-500 text-white rounded hover:bg-blue-600 cursor-pointer" />
+    <div className="flex flex-col min-h-screen bg-slate-100">
+      {/* Global Header */}
+      <header className="bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-10 py-6">
+          <h1 className="text-3xl font-bold">📝 Visor Markdown</h1>
+          <p className="text-slate-300 text-sm mt-1">Convierte Markdown a HTML en tiempo real</p>
         </div>
-        <div className="flex-col"> </div>
+      </header>
 
-        {/* Main content goes here */}
-        <div className="flex flex-1 gap-4 overflow-hidden">
+      {/* Main Content */}
+      <main className="flex-grow p-10">
+        <div className="max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm">
 
-          {/* Markdown Area */}
-          <textarea
-            className="w-1/2 p-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none font-mono text-sm"
-            placeholder="Enter your markdown here..."
-          />
-
-          {
-          /* HTML preview Area */}  
-          <div className="w-1/2 p-4 border rounded-lg shadow-sm bg-gray-50 overflow-auto">
-            <h2 className="text-lg font-semibold mb-4">HTML Preview</h2>
-            <div className="prose prose-sm">
-              {/* Rendered HTML will go here */}
-              <p>This is where the rendered HTML will appear.</p>
+        {/* Main Interface */}
+        <div className="flex h-[600px]">
+          {/* Editor Panel */}
+          <div className="w-1/2 flex flex-col border-r border-slate-200">
+            {/* Editor Header */}
+            <div className="bg-slate-200 px-4 py-2 border-b border-slate-300">
+              <h3 className="text-sm font-semibold text-slate-700">✏️ Editor Markdown</h3>
             </div>
+
+            {/* Toolbar */}
+            <div className="bg-slate-900 px-3 py-2 flex gap-2">
+              <button onClick={() => insertText('**', '**')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm font-bold hover:bg-slate-500">B</button>
+              <button onClick={() => insertText('*', '*')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm italic hover:bg-slate-500">I</button>
+              <button onClick={() => insertText('# ')} className="px-3 py-1 bg-slate-600 text-white rounded text-xs font-bold hover:bg-slate-500">H1</button>
+              <button onClick={() => insertText('## ')} className="px-3 py-1 bg-slate-600 text-white rounded text-xs font-bold hover:bg-slate-500">H2</button>
+              <button onClick={() => insertText('> ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">❝</button>
+              <button onClick={() => insertText('```\n', '\n```')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">⌨️</button>
+              <button onClick={() => insertText('- ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">•</button>
+              <button onClick={() => insertText('1. ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">1.</button>
+              <button onClick={() => insertText('[', '](url)')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">🔗</button>
+            </div>
+
+            {/* Editor Content */}
+            <textarea
+              ref={textareaRef}
+              value={markdown}
+              onChange={(e) => setMarkdown(e.target.value)}
+              className="flex-1 p-4 bg-slate-800 text-slate-200 font-mono text-sm resize-none outline-none"
+              placeholder="Escribe tu Markdown aquí..."
+            />
           </div>
 
+          {/* Preview Panel */}
+          <div className="w-1/2 flex flex-col">
+            {/* Preview Header */}
+            <div className="bg-blue-100 px-4 py-2 border-b border-blue-200 flex justify-between items-center">
+              <h3 className="text-sm font-semibold text-blue-800">👁️ Vista Previa HTML</h3>
+              <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full">RT</span>
+            </div>
 
+            {/* Preview Content */}
+            <div className="flex-1 p-6 bg-white overflow-auto">
+              <div
+                className="prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: convertToHTML() }}
+              />
+            </div>
+          </div>
         </div>
-
-
-
+        </div>
       </main>
 
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        <p>© 2026 - Created by HEPAC</p>
+      {/* Global Footer */}
+      <footer className="bg-slate-900 text-slate-400 shadow-sm border-t border-slate-700">
+        <div className="max-w-7xl mx-auto px-10 py-6">
+          <div className="grid grid-cols-3 gap-8 mb-6">
+            <div>
+              <h3 className="text-white font-semibold mb-3">Características</h3>
+              <ul className="text-sm space-y-1">
+                <li>✓ Conversión en tiempo real</li>
+                <li>✓ Protección contra XSS</li>
+                <li>✓ Interfaz intuitiva</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3">Tecnología</h3>
+              <ul className="text-sm space-y-1">
+                <li>React + Vite</li>
+                <li>Tailwind CSS</li>
+                <li>Marked + DOMPurify</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-3">Información</h3>
+              <ul className="text-sm space-y-1">
+                <li>v1.0</li>
+                <li>2026 © HEPAC</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-slate-700 pt-4 text-center text-sm">
+            <p>Diseñado con ❤️ para convertir Markdown a HTML</p>
+          </div>
+        </div>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

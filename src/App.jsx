@@ -1,30 +1,36 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
+// Configurar marked correctamente
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
+
 function App() {
-  const [markdown, setMarkdown] = useState(`# Bienvenido al Visor Markdown
-
-Escribe tu contenido aqui...
-
-## Caracteristicas
-
-Convierte Markdown a **HTML** en tiempo real.
-
-- Vista previa instantanea
-- Proteccion contra XSS
-- Interfaz intuitiva
-- Y algo mas
-
-> Cita de ejemplo con estilo
-
-\`\`\`javascript
-const html = marked(markdown);
-\`\`\`
-
-[Ver documentacion](https://ejemplo.com)`);
-
+  const [markdown, setMarkdown] = useState(`Escribe tu contenido con Markdown aqui... `);
+  const [htmlContent, setHtmlContent] = useState('');
   const textareaRef = useRef(null);
+
+  // Convertir markdown a HTML cuando cambye
+  useEffect(() => {
+    const convertMarkdown = async () => {
+      if (markdown.trim()) {
+        try {
+          const rawHtml = await marked.parse(markdown);
+          const sanitized = DOMPurify.sanitize(rawHtml);
+          setHtmlContent(sanitized);
+        } catch (error) {
+          console.error('Error converting markdown:', error);
+          setHtmlContent('');
+        }
+      } else {
+        setHtmlContent('');
+      }
+    };
+    convertMarkdown();
+  }, [markdown]);
 
   const insertText = (before, after = '') => {
     const textarea = textareaRef.current;
@@ -44,11 +50,6 @@ const html = marked(markdown);
     }, 0);
   };
 
-  const convertToHTML = () => {
-    const rawHtml = marked(markdown);
-    return DOMPurify.sanitize(rawHtml);
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-slate-100">
       {/* Global Header */}
@@ -60,7 +61,7 @@ const html = marked(markdown);
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow p-10">
+      <main className="grow p-10">
         <div className="max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm">
 
         {/* Main Interface */}
@@ -106,8 +107,8 @@ const html = marked(markdown);
             {/* Preview Content */}
             <div className="flex-1 p-6 bg-white overflow-auto">
               <div
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: convertToHTML() }}
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
             </div>
           </div>
@@ -128,7 +129,7 @@ const html = marked(markdown);
               </ul>
             </div>
             <div>
-              <h3 className="text-white font-semibold mb-3">Tecnología</h3>
+              <h3 className="text-white font-semibold mb-3">Tecnologías</h3>
               <ul className="text-sm space-y-1">
                 <li>React + Vite</li>
                 <li>Tailwind CSS</li>
@@ -144,7 +145,7 @@ const html = marked(markdown);
             </div>
           </div>
           <div className="border-t border-slate-700 pt-4 text-center text-sm">
-            <p>Diseñado con ❤️ para convertir Markdown a HTML</p>
+            <p>Diseñado con ❤️ por © HEPAC</p>
           </div>
         </div>
       </footer>

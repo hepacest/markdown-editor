@@ -1,6 +1,9 @@
+
 # Visor Markdown (React + Vite)
 
+###################################################
 ## English version
+###################################################
 
 Web app to view and edit Markdown in real time with instant preview.
 
@@ -67,7 +70,9 @@ Build output will be in `dist`.
 - React: https://react.dev/
 - Tailwind CSS: https://tailwindcss.com/
 
+###################################################
 ## Versión en español
+###################################################
 
 Aplicación web para visualizar y editar Markdown en tiempo real con vista previa instantánea.
 

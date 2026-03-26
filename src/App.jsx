@@ -9,7 +9,7 @@ marked.setOptions({
 });
 
 function App() {
-  const [markdown, setMarkdown] = useState(`Escribe tu contenido con Markdown aqui... `);
+  const [markdown, setMarkdown] = useState('');
   const [htmlContent, setHtmlContent] = useState('');
   const textareaRef = useRef(null);
 
@@ -92,7 +92,7 @@ function App() {
               value={markdown}
               onChange={(e) => setMarkdown(e.target.value)}
               className="flex-1 p-4 bg-slate-800 text-slate-200 font-mono text-sm resize-none outline-none"
-              placeholder="Escribe tu Markdown aquí..."
+              placeholder="Escribe tu contenido con Markdown aquí..."
             />
           </div>
 

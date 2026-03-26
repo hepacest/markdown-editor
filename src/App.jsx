@@ -11,7 +11,10 @@ marked.setOptions({
 function App() {
   const [markdown, setMarkdown] = useState('');
   const [htmlContent, setHtmlContent] = useState('');
+  const [dividerPosition, setDividerPosition] = useState(50); // porcentaje de ancho para editor
+  const [isResizing, setIsResizing] = useState(false);
   const textareaRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Convertir markdown a HTML cuando cambye
   useEffect(() => {
@@ -31,6 +34,31 @@ function App() {
     };
     convertMarkdown();
   }, [markdown]);
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const onMouseMove = (event) => {
+      const container = containerRef.current;
+      if (!container) return;
+      const { left, width } = container.getBoundingClientRect();
+      const offset = event.clientX - left;
+      const next = Math.max(20, Math.min(80, (offset / width) * 100));
+      setDividerPosition(next);
+    };
+
+    const onMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [isResizing]);
 
   const insertText = (before, after = '') => {
     const textarea = textareaRef.current;
@@ -65,9 +93,16 @@ function App() {
         <div className="max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm">
 
         {/* Main Interface */}
-        <div className="flex h-[600px]">
+        <div
+          ref={containerRef}
+          className="flex h-[600px] relative"
+          style={{ userSelect: isResizing ? 'none' : 'auto' }}
+        >
           {/* Editor Panel */}
-          <div className="w-1/2 flex flex-col border-r border-slate-200">
+          <div
+            className="flex flex-col border-r border-slate-200 overflow-hidden"
+            style={{ flex: `0 0 ${dividerPosition}%`, minWidth: '220px' }}
+          >
             {/* Editor Header */}
             <div className="bg-slate-200 px-4 py-2 border-b border-slate-300">
               <h3 className="text-sm font-semibold text-slate-700">✏️ Editor Markdown</h3>
@@ -96,8 +131,15 @@ function App() {
             />
           </div>
 
+          {/* Divider draggable */}
+          <div
+            onMouseDown={() => setIsResizing(true)}
+            className="cursor-col-resize bg-slate-300 hover:bg-slate-400"
+            style={{ width: '8px', zIndex: 20 }}
+          />
+
           {/* Preview Panel */}
-          <div className="w-1/2 flex flex-col">
+          <div className="flex flex-col" style={{ flex: 1, minWidth: '220px' }}>
             {/* Preview Header */}
             <div className="bg-blue-100 px-4 py-2 border-b border-blue-200 flex justify-between items-center">
               <h3 className="text-sm font-semibold text-blue-800">👁️ Vista Previa HTML</h3>

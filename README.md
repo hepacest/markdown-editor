@@ -2,26 +2,29 @@
 
 ## English version
 
-Web app to view and edit Markdown in real time with instant preview.
+A frontend-only web app that converts Markdown text into HTML with a live preview.
 
 ### What it does
 
-- Parses Markdown input (plain text with Markdown syntax).
-- Renders live HTML preview instantly.
-- Supports basic editing behavior (copy/paste, text styling, live update).
-- Minimal local setup for localhost development.
+- Parses Markdown input using `marked`.
+- Sanitizes generated HTML with `DOMPurify` to prevent XSS.
+- Renders the result instantly in a preview panel.
+- Offers a toolbar to insert common Markdown syntax.
+- Allows resizing the editor and preview panels with a draggable divider.
 
 ### Tech stack
 
-- React (JSX) for UI.
-- Vite as bundler and dev server (HMR).
-- Tailwind CSS for utility-first styling (`tailwind.config.js`).
-- ESLint for code quality.
+- React for UI.
+- Vite as bundler and dev server.
+- Tailwind CSS for styling.
+- `marked` for Markdown parsing.
+- `DOMPurify` for HTML sanitization.
+- ESLint for linting.
 
 ### Requirements
 
 - Node.js 18+ (20 recommended)
-- npm 9+ / pnpm 8+ / yarn 1.22+
+- npm 9+
 
 ### Install and run
 
@@ -33,7 +36,6 @@ Web app to view and edit Markdown in real time with instant preview.
 2. Install dependencies:
    ```bash
    npm install
-   npm install marked dompurify @tailwindcss/postcss
    ```
 3. Run dev server:
    ```bash
@@ -50,16 +52,18 @@ npm run build
 
 Build output will be in `dist`.
 
-### Usage tips
+### Available scripts
 
-- Keep Markdown text in left panel, preview updates automatically.
-- Save edited content by copying to `.md` file manually or implement an export flow.
+- `npm run dev` — starts the Vite development server.
+- `npm run build` — bundles the app for production.
+- `npm run lint` — runs ESLint checks.
+- `npm run preview` — locally previews the production build.
 
-### Extras / best practices
+### Usage notes
 
-- Add `.env` to `.gitignore` for local private config.
-- Use `npm run lint` and `npm run format` if lint/formatter scripts exist.
-- Add unit tests (Jest/Vitest) for parsing and rendering components.
+- Write Markdown in the left panel.
+- The HTML preview updates automatically on each change.
+- Use the toolbar buttons to insert formatting such as headings, bold, italics, code blocks, lists, and links.
 
 ### Resources
 
@@ -69,26 +73,29 @@ Build output will be in `dist`.
 
 ## Versión en español
 
-Aplicación web para visualizar y editar Markdown en tiempo real con vista previa instantánea.
+Aplicación frontend que convierte texto Markdown a HTML con vista previa en tiempo real.
 
 ### Qué hace
 
-- Interpreta Markdown (texto plano con sintaxis Markdown).
-- Renderiza vista previa en HTML en tiempo real.
-- Soporta comportamiento básico de edición (copiar/pegar, estilo de texto, actualización automática).
-- Configuración mínima para desarrollo en localhost.
+- Convierte Markdown a HTML con `marked`.
+- Sanitiza el HTML generado con `DOMPurify` para prevenir XSS.
+- Muestra el resultado de inmediato en un panel de vista previa.
+- Incluye una barra de herramientas para insertar sintaxis Markdown común.
+- Permite redimensionar los paneles de editor y vista previa con un divisor arrastrable.
 
 ### Tecnologías
 
-- React (JSX) para la interfaz.
-- Vite como bundler y servidor de desarrollo (HMR).
-- Tailwind CSS para estilos utilitarios (`tailwind.config.js`).
+- React para la interfaz.
+- Vite como bundler y servidor de desarrollo.
+- Tailwind CSS para el estilo.
+- `marked` para parsear Markdown.
+- `DOMPurify` para sanitizar HTML.
 - ESLint para calidad de código.
 
 ### Requisitos
 
 - Node.js 18+ (20 recomendado)
-- npm 9+ / pnpm 8+ / yarn 1.22+
+- npm 9+
 
 ### Instalación y ejecución
 
@@ -100,7 +107,6 @@ Aplicación web para visualizar y editar Markdown en tiempo real con vista previ
 2. Instala dependencias:
    ```bash
    npm install
-   npm install marked dompurify @tailwindcss/postcss
    ```
 3. Inicia el servidor de desarrollo:
    ```bash
@@ -117,16 +123,18 @@ npm run build
 
 El resultado se genera en `dist`.
 
-### Consejos de uso
+### Scripts disponibles
 
-- Mantén el Markdown en el panel izquierdo, la vista previa se actualiza automáticamente.
-- Guarda el contenido en un archivo `.md` manualmente o agrega flujo de exportación.
+- `npm run dev` — inicia el servidor de desarrollo Vite.
+- `npm run build` — genera el build de producción.
+- `npm run lint` — ejecuta ESLint.
+- `npm run preview` — previsualiza el build de producción localmente.
 
-### Extras / buenas prácticas
+### Notas de uso
 
-- Añade `.env` en `.gitignore` para configuración privada local.
-- Ejecuta `npm run lint` y `npm run format` si están disponibles.
-- Añade tests unitarios (Jest/Vitest) para parsing y renderizado.
+- Escribe Markdown en el panel izquierdo.
+- La vista previa HTML se actualiza automáticamente con cada cambio.
+- Usa los botones de la barra de herramientas para insertar encabezados, negrita, cursiva, código, listas y enlaces.
 
 ### Recursos
 

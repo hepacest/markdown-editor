@@ -1,3 +1,4 @@
+
 # Visor Markdown (React + Vite)
 
 ## English version
@@ -71,7 +72,9 @@ Build output will be in `dist`.
 - React: https://react.dev/
 - Tailwind CSS: https://tailwindcss.com/
 
+###################################################
 ## Versión en español
+
 
 Aplicación frontend que convierte texto Markdown a HTML con vista previa en tiempo real.
 

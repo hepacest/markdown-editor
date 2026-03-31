@@ -60,6 +60,18 @@ Build output will be in `dist`.
 - `npm run lint` — runs ESLint checks.
 - `npm run preview` — locally previews the production build.
 
+### CI/CD
+
+This project includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that deploys the app to Vercel on every push to the `main` branch. The workflow:
+
+- checks out the repository
+- installs Node.js 20
+- runs `npm install`
+- builds the project with `npm run build`
+- deploys to Vercel using `amondnet/vercel-action@v20`
+- uses the `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets
+- passes `--prod` to deploy a production build
+
 ### Usage notes
 
 - Write Markdown in the left panel.
@@ -132,6 +144,18 @@ El resultado se genera en `dist`.
 - `npm run build` — genera el build de producción.
 - `npm run lint` — ejecuta ESLint.
 - `npm run preview` — previsualiza el build de producción localmente.
+
+### CI/CD
+
+Este proyecto incluye un workflow de GitHub Actions en `.github/workflows/deploy.yml` que despliega la app a Vercel en cada push a la rama `main`. El workflow:
+
+- hace checkout del repositorio
+- instala Node.js 20
+- ejecuta `npm install`
+- construye el proyecto con `npm run build`
+- despliega a Vercel usando `amondnet/vercel-action@v20`
+- usa los secretos `VERCEL_TOKEN`, `VERCEL_ORG_ID` y `VERCEL_PROJECT_ID`
+- pasa `--prod` para desplegar una versión de producción
 
 ### Notas de uso
 

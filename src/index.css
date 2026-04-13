@@ -1,2 +1,130 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+.app {
+  @apply flex flex-col min-h-screen bg-slate-100;
+}
+
+.app--resizing .app__layout {
+  user-select: none;
+}
+
+.app__header {
+  @apply bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-lg;
+}
+
+.app__header-inner {
+  @apply max-w-7xl mx-auto px-10 py-6;
+}
+
+.app__title {
+  @apply text-3xl font-bold;
+}
+
+.app__subtitle {
+  @apply text-slate-300 text-sm mt-1;
+}
+
+.app__main {
+  @apply grow p-10;
+}
+
+.app__container {
+  @apply max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm;
+}
+
+.app__layout {
+  @apply flex relative;
+  height: 600px;
+  user-select: auto;
+}
+
+.app__editor-panel {
+  @apply flex flex-col border-r border-slate-200 overflow-hidden;
+  flex: 0 0 var(--editor-width, 50%);
+  min-width: 220px;
+}
+
+.app__editor-header {
+  @apply bg-slate-200 px-4 py-2 border-b border-slate-300;
+}
+
+.app__editor-title {
+  @apply text-sm font-semibold text-slate-700;
+}
+
+.app__toolbar {
+  @apply bg-slate-900 px-3 py-2 flex gap-2;
+}
+
+.app__toolbar-button {
+  @apply px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500;
+}
+
+.app__toolbar-button--bold {
+  @apply font-bold;
+}
+
+.app__toolbar-button--italic {
+  @apply italic;
+}
+
+.app__toolbar-button--heading {
+  @apply text-xs font-bold;
+}
+
+.app__textarea {
+  @apply flex-1 p-4 bg-slate-800 text-slate-200 font-mono text-sm resize-none outline-none;
+}
+
+.app__divider {
+  @apply cursor-col-resize bg-slate-300 hover:bg-slate-400;
+  width: 8px;
+  z-index: 20;
+}
+
+.app__preview-panel {
+  @apply flex flex-col;
+  flex: 1;
+  min-width: 220px;
+}
+
+.app__preview-header {
+  @apply bg-blue-100 px-4 py-2 border-b border-blue-200 flex justify-between items-center;
+}
+
+.app__preview-title {
+  @apply text-sm font-semibold text-blue-800;
+}
+
+.app__preview-badge {
+  @apply bg-blue-600 text-white text-xs px-3 py-1 rounded-full;
+}
+
+.app__preview-content {
+  @apply flex-1 p-6 bg-white overflow-auto;
+}
+
+.app__footer {
+  @apply bg-slate-900 text-slate-400 shadow-sm border-t border-slate-700;
+}
+
+.app__footer-inner {
+  @apply max-w-7xl mx-auto px-10 py-6;
+}
+
+.app__footer-grid {
+  @apply grid grid-cols-3 gap-8 mb-6;
+}
+
+.app__footer-title {
+  @apply text-white font-semibold mb-3;
+}
+
+.app__footer-list {
+  @apply text-sm space-y-1;
+}
+
+.app__footer-bottom {
+  @apply border-t border-slate-700 pt-4 text-center text-sm;
+}

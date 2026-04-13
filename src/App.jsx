@@ -79,46 +79,43 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-100">
+    <div className={`app${isResizing ? ' app--resizing' : ''}`}>
       {/* Global Header */}
-      <header className="bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-10 py-6">
-          <h1 className="text-3xl font-bold">📝 Visor Markdown</h1>
-          <p className="text-slate-300 text-sm mt-1">Convierte Markdown a HTML en tiempo real</p>
+      <header className="app__header">
+        <div className="app__header-inner">
+          <h1 className="app__title">📝 Visor Markdown</h1>
+          <p className="app__subtitle">Convierte Markdown a HTML en tiempo real</p>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="grow p-10">
-        <div className="max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm">
+      <main className="app__main">
+        <div className="app__container">
 
         {/* Main Interface */}
         <div
           ref={containerRef}
-          className="flex h-[600px] relative"
-          style={{ userSelect: isResizing ? 'none' : 'auto' }}
+          className="app__layout"
+          style={{ '--editor-width': `${dividerPosition}%` }}
         >
           {/* Editor Panel */}
-          <div
-            className="flex flex-col border-r border-slate-200 overflow-hidden"
-            style={{ flex: `0 0 ${dividerPosition}%`, minWidth: '220px' }}
-          >
+          <div className="app__editor-panel">
             {/* Editor Header */}
-            <div className="bg-slate-200 px-4 py-2 border-b border-slate-300">
-              <h3 className="text-sm font-semibold text-slate-700">✏️ Editor Markdown</h3>
+            <div className="app__editor-header">
+              <h3 className="app__editor-title">✏️ Editor Markdown</h3>
             </div>
 
             {/* Toolbar */}
-            <div className="bg-slate-900 px-3 py-2 flex gap-2">
-              <button onClick={() => insertText('**', '**')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm font-bold hover:bg-slate-500">B</button>
-              <button onClick={() => insertText('*', '*')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm italic hover:bg-slate-500">I</button>
-              <button onClick={() => insertText('# ')} className="px-3 py-1 bg-slate-600 text-white rounded text-xs font-bold hover:bg-slate-500">H1</button>
-              <button onClick={() => insertText('## ')} className="px-3 py-1 bg-slate-600 text-white rounded text-xs font-bold hover:bg-slate-500">H2</button>
-              <button onClick={() => insertText('> ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">❝</button>
-              <button onClick={() => insertText('```\n', '\n```')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">⌨️</button>
-              <button onClick={() => insertText('- ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">•</button>
-              <button onClick={() => insertText('1. ')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">1.</button>
-              <button onClick={() => insertText('[', '](url)')} className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-500">🔗</button>
+            <div className="app__toolbar">
+              <button onClick={() => insertText('**', '**')} className="app__toolbar-button app__toolbar-button--bold">B</button>
+              <button onClick={() => insertText('*', '*')} className="app__toolbar-button app__toolbar-button--italic">I</button>
+              <button onClick={() => insertText('# ')} className="app__toolbar-button app__toolbar-button--heading">H1</button>
+              <button onClick={() => insertText('## ')} className="app__toolbar-button app__toolbar-button--heading">H2</button>
+              <button onClick={() => insertText('> ')} className="app__toolbar-button">❝</button>
+              <button onClick={() => insertText('```\n', '\n```')} className="app__toolbar-button">⌨️</button>
+              <button onClick={() => insertText('- ')} className="app__toolbar-button">•</button>
+              <button onClick={() => insertText('1. ')} className="app__toolbar-button">1.</button>
+              <button onClick={() => insertText('[', '](url)')} className="app__toolbar-button">🔗</button>
             </div>
 
             {/* Editor Content */}
@@ -126,7 +123,7 @@ function App() {
               ref={textareaRef}
               value={markdown}
               onChange={(e) => setMarkdown(e.target.value)}
-              className="flex-1 p-4 bg-slate-800 text-slate-200 font-mono text-sm resize-none outline-none"
+              className="app__textarea"
               placeholder="Escribe tu contenido con Markdown aquí..."
             />
           </div>
@@ -134,20 +131,19 @@ function App() {
           {/* Divider draggable */}
           <div
             onMouseDown={() => setIsResizing(true)}
-            className="cursor-col-resize bg-slate-300 hover:bg-slate-400"
-            style={{ width: '8px', zIndex: 20 }}
+            className="app__divider"
           />
 
           {/* Preview Panel */}
-          <div className="flex flex-col" style={{ flex: 1, minWidth: '220px' }}>
+          <div className="app__preview-panel">
             {/* Preview Header */}
-            <div className="bg-blue-100 px-4 py-2 border-b border-blue-200 flex justify-between items-center">
-              <h3 className="text-sm font-semibold text-blue-800">👁️ Vista Previa HTML</h3>
-              <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full">RT</span>
+            <div className="app__preview-header">
+              <h3 className="app__preview-title">👁️ Vista Previa HTML</h3>
+              <span className="app__preview-badge">RT</span>
             </div>
 
             {/* Preview Content */}
-            <div className="flex-1 p-6 bg-white overflow-auto">
+            <div className="app__preview-content">
               <div
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -159,34 +155,34 @@ function App() {
       </main>
 
       {/* Global Footer */}
-      <footer className="bg-slate-900 text-slate-400 shadow-sm border-t border-slate-700">
-        <div className="max-w-7xl mx-auto px-10 py-6">
-          <div className="grid grid-cols-3 gap-8 mb-6">
+      <footer className="app__footer">
+        <div className="app__footer-inner">
+          <div className="app__footer-grid">
             <div>
-              <h3 className="text-white font-semibold mb-3">Características</h3>
-              <ul className="text-sm space-y-1">
+              <h3 className="app__footer-title">Características</h3>
+              <ul className="app__footer-list">
                 <li>✓ Conversión en tiempo real</li>
                 <li>✓ Protección contra XSS</li>
                 <li>✓ Interfaz intuitiva</li>
               </ul>
             </div>
             <div>
-              <h3 className="text-white font-semibold mb-3">Tecnologías</h3>
-              <ul className="text-sm space-y-1">
+              <h3 className="app__footer-title">Tecnologías</h3>
+              <ul className="app__footer-list">
                 <li>React + Vite</li>
                 <li>Tailwind CSS</li>
                 <li>Marked + DOMPurify</li>
               </ul>
             </div>
             <div>
-              <h3 className="text-white font-semibold mb-3">Información</h3>
-              <ul className="text-sm space-y-1">
+              <h3 className="app__footer-title">Información</h3>
+              <ul className="app__footer-list">
                 <li>v1.0</li>
                 <li>2026 © HEPAC</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-700 pt-4 text-center text-sm">
+          <div className="app__footer-bottom">
             <p>Diseñado con ❤️ por © HEPAC</p>
           </div>
         </div>

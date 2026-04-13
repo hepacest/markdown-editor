@@ -10,7 +10,7 @@
 }
 
 .app__header {
-  @apply bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-lg;
+  @apply bg-linear-to-r from-slate-800 to-slate-700 text-white shadow-lg;
 }
 
 .app__header-inner {

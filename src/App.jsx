@@ -1,14 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import es from "./languages/es";
+import en from "./languages/en";
 
-// Configurar marked correctamente
+const translations = { es, en };
+
+
 marked.setOptions({
   breaks: true,
   gfm: true,
 });
 
 function App() {
+  const [locale, setLocale] = useState('es');
+  const t = translations[locale];
   const [markdown, setMarkdown] = useState('');
   const [htmlContent, setHtmlContent] = useState('');
   const [dividerPosition, setDividerPosition] = useState(50); // porcentaje de ancho para editor
@@ -16,7 +22,7 @@ function App() {
   const textareaRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Convertir markdown a HTML cuando cambye
+
   useEffect(() => {
     const convertMarkdown = async () => {
       if (markdown.trim()) {
@@ -71,7 +77,6 @@ function App() {
     const newMarkdown = markdown.substring(0, start) + newText + markdown.substring(end);
     setMarkdown(newMarkdown);
 
-    // Set cursor position after insertion
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
@@ -83,8 +88,28 @@ function App() {
       {/* Global Header */}
       <header className="app__header">
         <div className="app__header-inner">
-          <h1 className="app__title">📝 Visor Markdown</h1>
-          <p className="app__subtitle">Convierte Markdown a HTML en tiempo real</p>
+          <h1 className="app__title">{t.appTitle}</h1>
+          <p className="app__subtitle">{t.appSubtitle}</p>
+          <div className="app__lang-switch">
+            <button
+              type="button"
+              className={`app__lang-btn ${locale === 'en' ? 'app__lang-btn--active' : ''}`}
+              aria-label={t.ariaEnglish}
+              title="English"
+              onClick={() => setLocale('en')}
+            >
+              <img src="/flags/us.svg" alt="United States flag" className="app__flag-img" />
+            </button>
+            <button
+              type="button"
+              className={`app__lang-btn ${locale === 'es' ? 'app__lang-btn--active' : ''}`}
+              aria-label={t.ariaSpanish}
+              title="Español"
+              onClick={() => setLocale('es')}
+            >
+              <img src="/flags/co.svg" alt="Bandera de Colombia" className="app__flag-img" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -102,7 +127,7 @@ function App() {
           <div className="app__editor-panel">
             {/* Editor Header */}
             <div className="app__editor-header">
-              <h3 className="app__editor-title">✏️ Editor Markdown</h3>
+              <h3 className="app__editor-title">{t.editorTitle}</h3>
             </div>
 
             {/* Toolbar */}
@@ -124,7 +149,7 @@ function App() {
               value={markdown}
               onChange={(e) => setMarkdown(e.target.value)}
               className="app__textarea"
-              placeholder="Escribe tu contenido con Markdown aquí..."
+              placeholder={t.textareaPlaceholder}
             />
           </div>
 
@@ -138,7 +163,7 @@ function App() {
           <div className="app__preview-panel">
             {/* Preview Header */}
             <div className="app__preview-header">
-              <h3 className="app__preview-title">👁️ Vista Previa HTML</h3>
+              <h3 className="app__preview-title">{t.previewTitle}</h3>
               <span className="app__preview-badge">RT</span>
             </div>
 
@@ -159,15 +184,15 @@ function App() {
         <div className="app__footer-inner">
           <div className="app__footer-grid">
             <div>
-              <h3 className="app__footer-title">Características</h3>
+              <h3 className="app__footer-title">{t.footerFeaturesTitle}</h3>
               <ul className="app__footer-list">
-                <li>✓ Conversión en tiempo real</li>
-                <li>✓ Protección contra XSS</li>
-                <li>✓ Interfaz intuitiva</li>
+                <li>{t.footerFeature1}</li>
+                <li>{t.footerFeature2}</li>
+                <li>{t.footerFeature3}</li>
               </ul>
             </div>
             <div>
-              <h3 className="app__footer-title">Tecnologías</h3>
+              <h3 className="app__footer-title">{t.footerTechTitle}</h3>
               <ul className="app__footer-list">
                 <li>React + Vite</li>
                 <li>Tailwind CSS</li>
@@ -175,7 +200,7 @@ function App() {
               </ul>
             </div>
             <div>
-              <h3 className="app__footer-title">Información</h3>
+              <h3 className="app__footer-title">{t.footerInfoTitle}</h3>
               <ul className="app__footer-list">
                 <li>v1.0</li>
                 <li>2026 © HEPAC</li>
@@ -183,7 +208,7 @@ function App() {
             </div>
           </div>
           <div className="app__footer-bottom">
-            <p>Diseñado con ❤️ por © HEPAC</p>
+            <p>{t.footerCopyright}</p>
           </div>
         </div>
       </footer>

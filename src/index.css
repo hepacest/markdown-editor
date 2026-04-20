@@ -128,3 +128,22 @@
 .app__footer-bottom {
   @apply border-t border-slate-700 pt-4 text-center text-sm;
 }
+
+.app__lang-switch {
+  @apply mt-5 flex items-center gap-3 justify-end;
+}
+
+.app__lang-btn {
+  @apply inline-flex items-center justify-center rounded-full
+         border border-slate-300 bg-white/90
+         w-6 h-6 p-0.5
+         text-slate-900 shadow-sm transition hover:bg-slate-100;
+}
+
+.app__lang-btn--active {
+  @apply border-slate-800 bg-slate-100;
+}
+
+.app__flag-img {
+  @apply w-4 h-4 rounded-full object-cover;
+}

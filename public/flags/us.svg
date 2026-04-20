@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7410 3900" role="img" aria-label="Bandera de Estados Unidos">
+  <rect width="7410" height="3900" fill="#b22234"/>
+  <g fill="#fff">
+    <rect y="300" width="7410" height="300"/>
+    <rect y="900" width="7410" height="300"/>
+    <rect y="1500" width="7410" height="300"/>
+    <rect y="2100" width="7410" height="300"/>
+    <rect y="2700" width="7410" height="300"/>
+    <rect y="3300" width="7410" height="300"/>
+  </g>
+  <rect width="2964" height="2100" fill="#3c3b6e"/>
+  <g fill="#fff">
+    <g id="stars">
+      <g id="star">
+        <polygon points="247,90 274,160 352,160 293,205 317,277 247,237 177,277 201,205 142,160 220,160"/>
+      </g>
+      <use href="#star" x="0" y="0"/>
+      <use href="#star" x="494" y="0"/>
+      <use href="#star" x="988" y="0"/>
+      <use href="#star" x="1482" y="0"/>
+      <use href="#star" x="1976" y="0"/>
+      <use href="#star" x="2470" y="0"/>
+      <use href="#star" x="74" y="210"/>
+      <use href="#star" x="568" y="210"/>
+      <use href="#star" x="1062" y="210"/>
+      <use href="#star" x="1556" y="210"/>
+      <use href="#star" x="2050" y="210"/>
+      <use href="#star" x="2544" y="210"/>
+      <use href="#star" x="0" y="420"/>
+      <use href="#star" x="494" y="420"/>
+      <use href="#star" x="988" y="420"/>
+      <use href="#star" x="1482" y="420"/>
+      <use href="#star" x="1976" y="420"/>
+      <use href="#star" x="2470" y="420"/>
+      <use href="#star" x="74" y="630"/>
+      <use href="#star" x="568" y="630"/>
+      <use href="#star" x="1062" y="630"/>
+      <use href="#star" x="1556" y="630"/>
+      <use href="#star" x="2050" y="630"/>
+      <use href="#star" x="2544" y="630"/>
+    </g>
+  </g>
+</svg>

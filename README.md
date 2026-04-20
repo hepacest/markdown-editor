@@ -7,11 +7,12 @@ A frontend-only web app that converts Markdown text into HTML with a live previe
 
 ### What it does
 
-- Parses Markdown input using `marked`.
-- Sanitizes generated HTML with `DOMPurify` to prevent XSS.
+- Converts Markdown to HTML.
+- Sanitizes generated HTML to prevent XSS.
 - Renders the result instantly in a preview panel.
 - Offers a toolbar to insert common Markdown syntax.
 - Allows resizing the editor and preview panels with a draggable divider.
+- Lets users switch the UI text between Spanish and English from the header.
 
 ### Tech stack
 
@@ -26,6 +27,7 @@ A frontend-only web app that converts Markdown text into HTML with a live previe
 
 - Node.js 18+ (20 recommended)
 - npm 9+
+- This project uses Node.js v25 and npm 11
 
 ### Install and run
 
@@ -53,13 +55,6 @@ npm run build
 
 Build output will be in `dist`.
 
-### Available scripts
-
-- `npm run dev` — starts the Vite development server.
-- `npm run build` — bundles the app for production.
-- `npm run lint` — runs ESLint checks.
-- `npm run preview` — locally previews the production build.
-
 ### CI/CD
 
 This project includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that deploys the app to Vercel on every push to the `main` branch. The workflow:
@@ -72,19 +67,14 @@ This project includes a GitHub Actions workflow at `.github/workflows/deploy.yml
 - uses the `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets
 - passes `--prod` to deploy a production build
 
-### Usage notes
-
-- Write Markdown in the left panel.
-- The HTML preview updates automatically on each change.
-- Use the toolbar buttons to insert formatting such as headings, bold, italics, code blocks, lists, and links.
-
 ### Resources
 
 - Vite: https://vitejs.dev/
 - React: https://react.dev/
 - Tailwind CSS: https://tailwindcss.com/
 
-###################################################
+
+---
 ## Versión en español
 
 
@@ -92,11 +82,12 @@ Aplicación frontend que convierte texto Markdown a HTML con vista previa en tie
 
 ### Qué hace
 
-- Convierte Markdown a HTML con `marked`.
-- Sanitiza el HTML generado con `DOMPurify` para prevenir XSS.
+- Convierte Markdown a HTML.
+- Sanitiza el HTML generado para prevenir XSS.
 - Muestra el resultado de inmediato en un panel de vista previa.
 - Incluye una barra de herramientas para insertar sintaxis Markdown común.
 - Permite redimensionar los paneles de editor y vista previa con un divisor arrastrable.
+- Permite cambiar los textos de la interfaz entre español e inglés desde el encabezado.
 
 ### Tecnologías
 
@@ -111,6 +102,7 @@ Aplicación frontend que convierte texto Markdown a HTML con vista previa en tie
 
 - Node.js 18+ (20 recomendado)
 - npm 9+
+- En el proyecto se usa Node.js v25 y npm 11
 
 ### Instalación y ejecución
 
@@ -138,12 +130,6 @@ npm run build
 
 El resultado se genera en `dist`.
 
-### Scripts disponibles
-
-- `npm run dev` — inicia el servidor de desarrollo Vite.
-- `npm run build` — genera el build de producción.
-- `npm run lint` — ejecuta ESLint.
-- `npm run preview` — previsualiza el build de producción localmente.
 
 ### CI/CD
 
@@ -157,11 +143,6 @@ Este proyecto incluye un workflow de GitHub Actions en `.github/workflows/deploy
 - usa los secretos `VERCEL_TOKEN`, `VERCEL_ORG_ID` y `VERCEL_PROJECT_ID`
 - pasa `--prod` para desplegar una versión de producción
 
-### Notas de uso
-
-- Escribe Markdown en el panel izquierdo.
-- La vista previa HTML se actualiza automáticamente con cada cambio.
-- Usa los botones de la barra de herramientas para insertar encabezados, negrita, cursiva, código, listas y enlaces.
 
 ### Recursos
 

@@ -105,6 +105,26 @@
   @apply flex-1 p-6 bg-white overflow-auto;
 }
 
+/* Fenced code block text color (```bash ... ```) */
+.prose :where(pre):not(:where([class~="not-prose"] *)) {
+  @apply bg-slate-800;
+}
+
+.prose :where(pre code):not(:where([class~="not-prose"] *)) {
+  color: #86efac; /* ← cambia este color para el texto del bloque de código */
+}
+
+/* Inline code styling inside preview */
+.prose :where(code):not(:where([class~="not-prose"] *)):not(pre code) {
+  @apply bg-slate-100 text-slate-800 font-mono rounded px-1.5 py-0.5 text-sm;
+  font-weight: 500;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)):not(pre code)::before,
+.prose :where(code):not(:where([class~="not-prose"] *)):not(pre code)::after {
+  content: none;
+}
+
 .app__footer {
   @apply bg-slate-900 text-slate-400 shadow-sm border-t border-slate-700;
 }

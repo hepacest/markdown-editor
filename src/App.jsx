@@ -1,18 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import { useState, useRef } from 'react';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import es from "./languages/es";
-import en from "./languages/en";
+import MarkdownEditor from './components/MarkdownEditor';
+import MarkdownPreview from './components/MarkdownPreview';
+import MarkdownToolbar from './components/MarkdownToolbar';
+import PanelResizer from './components/PanelResizer';
+import useMarkdownPreview from './hooks/useMarkdownPreview.js';
+import usePanelResize from './hooks/usePanelResize.js';
+import es from './languages/es.js';
+import en from './languages/en.js';
+import { applyMarkdownInsertion } from './utils/markdownInsertion.js';
 
 const translations = { es, en };
-
-
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-});
 
 function App() {
   const [locale, setLocale] = useState('es');
@@ -32,70 +31,32 @@ function App() {
     },
   ];
   const [markdown, setMarkdown] = useState('');
-  const [htmlContent, setHtmlContent] = useState('');
-  const [dividerPosition, setDividerPosition] = useState(50); // porcentaje de ancho para editor
-  const [isResizing, setIsResizing] = useState(false);
   const textareaRef = useRef(null);
   const containerRef = useRef(null);
-
-
-  useEffect(() => {
-    const convertMarkdown = async () => {
-      if (markdown.trim()) {
-        try {
-          const rawHtml = await marked.parse(markdown);
-          const sanitized = DOMPurify.sanitize(rawHtml);
-          setHtmlContent(sanitized);
-        } catch (error) {
-          console.error('Error converting markdown:', error);
-          setHtmlContent('');
-        }
-      } else {
-        setHtmlContent('');
-      }
-    };
-    convertMarkdown();
-  }, [markdown]);
-
-  useEffect(() => {
-    if (!isResizing) return;
-
-    const onMouseMove = (event) => {
-      const container = containerRef.current;
-      if (!container) return;
-      const { left, width } = container.getBoundingClientRect();
-      const offset = event.clientX - left;
-      const next = Math.max(20, Math.min(80, (offset / width) * 100));
-      setDividerPosition(next);
-    };
-
-    const onMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [isResizing]);
+  const htmlContent = useMarkdownPreview(markdown);
+  const {
+    dividerPosition,
+    isResizing,
+    startResizing,
+  } = usePanelResize(containerRef);
 
   const insertText = (before, after = '') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = markdown.substring(start, end);
-    const newText = before + selectedText + after;
-    const newMarkdown = markdown.substring(0, start) + newText + markdown.substring(end);
-    setMarkdown(newMarkdown);
+    const { nextValue, selectionStart, selectionEnd } = applyMarkdownInsertion({
+      value: markdown,
+      selectionStart: textarea.selectionStart,
+      selectionEnd: textarea.selectionEnd,
+      before,
+      after,
+    });
+
+    setMarkdown(nextValue);
 
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
+      textarea.setSelectionRange(selectionStart, selectionEnd);
     }, 0);
   };
 
@@ -120,58 +81,23 @@ function App() {
           className="app__layout"
           style={{ '--editor-width': `${dividerPosition}%` }}
         >
-          {/* Editor Panel */}
           <div className="app__editor-panel">
-            {/* Editor Header */}
             <div className="app__editor-header">
               <h3 className="app__editor-title">{t.editorTitle}</h3>
             </div>
 
-            {/* Toolbar */}
-            <div className="app__toolbar">
-              <button onClick={() => insertText('**', '**')} className="app__toolbar-button app__toolbar-button--bold">B</button>
-              <button onClick={() => insertText('*', '*')} className="app__toolbar-button app__toolbar-button--italic">I</button>
-              <button onClick={() => insertText('# ')} className="app__toolbar-button app__toolbar-button--heading">H1</button>
-              <button onClick={() => insertText('## ')} className="app__toolbar-button app__toolbar-button--heading">H2</button>
-              <button onClick={() => insertText('> ')} className="app__toolbar-button">❝</button>
-              <button onClick={() => insertText('```\n', '\n```')} className="app__toolbar-button">⌨️</button>
-              <button onClick={() => insertText('- ')} className="app__toolbar-button">•</button>
-              <button onClick={() => insertText('1. ')} className="app__toolbar-button">1.</button>
-              <button onClick={() => insertText('[', '](url)')} className="app__toolbar-button">🔗</button>
-            </div>
-
-            {/* Editor Content */}
-            <textarea
+            <MarkdownToolbar onInsert={insertText} />
+            <MarkdownEditor
               ref={textareaRef}
               value={markdown}
-              onChange={(e) => setMarkdown(e.target.value)}
-              className="app__textarea"
+              onChange={setMarkdown}
               placeholder={t.textareaPlaceholder}
             />
           </div>
 
-          {/* Divider draggable */}
-          <div
-            onMouseDown={() => setIsResizing(true)}
-            className="app__divider"
-          />
+          <PanelResizer onMouseDown={startResizing} />
 
-          {/* Preview Panel */}
-          <div className="app__preview-panel">
-            {/* Preview Header */}
-            <div className="app__preview-header">
-              <h3 className="app__preview-title">{t.previewTitle}</h3>
-              <span className="app__preview-badge">RT</span>
-            </div>
-
-            {/* Preview Content */}
-            <div className="app__preview-content">
-              <div
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
-            </div>
-          </div>
+          <MarkdownPreview htmlContent={htmlContent} title={t.previewTitle} />
         </div>
         </div>
       </main>

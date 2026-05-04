@@ -26,3 +26,7 @@ dist-ssr
 .vercel
 
 .docBase
+
+.env
+.env.*
+!.env.example

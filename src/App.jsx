@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import Footer from './components/Footer';
+import Header from './components/Header';
 import es from "./languages/es";
 import en from "./languages/en";
 
@@ -15,6 +17,20 @@ marked.setOptions({
 function App() {
   const [locale, setLocale] = useState('es');
   const t = translations[locale];
+  const footerColumns = [
+    {
+      title: t.footerFeaturesTitle,
+      items: [t.footerFeature1, t.footerFeature2, t.footerFeature3],
+    },
+    {
+      title: t.footerTechTitle,
+      items: ['React + Vite', 'Tailwind CSS', 'Marked + DOMPurify'],
+    },
+    {
+      title: t.footerInfoTitle,
+      items: ['v1.0', '2026 © HEPAC'],
+    },
+  ];
   const [markdown, setMarkdown] = useState('');
   const [htmlContent, setHtmlContent] = useState('');
   const [dividerPosition, setDividerPosition] = useState(50); // porcentaje de ancho para editor
@@ -85,33 +101,14 @@ function App() {
 
   return (
     <div className={`app${isResizing ? ' app--resizing' : ''}`}>
-      {/* Global Header */}
-      <header className="app__header">
-        <div className="app__header-inner">
-          <h1 className="app__title">{t.appTitle}</h1>
-          <p className="app__subtitle">{t.appSubtitle}</p>
-          <div className="app__lang-switch">
-            <button
-              type="button"
-              className={`app__lang-btn ${locale === 'en' ? 'app__lang-btn--active' : ''}`}
-              aria-label={t.ariaEnglish}
-              title="English"
-              onClick={() => setLocale('en')}
-            >
-              <img src="/flags/us.svg" alt="United States flag" className="app__flag-img" />
-            </button>
-            <button
-              type="button"
-              className={`app__lang-btn ${locale === 'es' ? 'app__lang-btn--active' : ''}`}
-              aria-label={t.ariaSpanish}
-              title="Español"
-              onClick={() => setLocale('es')}
-            >
-              <img src="/flags/co.svg" alt="Bandera de Colombia" className="app__flag-img" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header
+        title={t.appTitle}
+        subtitle={t.appSubtitle}
+        locale={locale}
+        ariaEnglish={t.ariaEnglish}
+        ariaSpanish={t.ariaSpanish}
+        onSelectLocale={setLocale}
+      />
 
       {/* Main Content */}
       <main className="app__main">
@@ -179,39 +176,7 @@ function App() {
         </div>
       </main>
 
-      {/* Global Footer */}
-      <footer className="app__footer">
-        <div className="app__footer-inner">
-          <div className="app__footer-grid">
-            <div>
-              <h3 className="app__footer-title">{t.footerFeaturesTitle}</h3>
-              <ul className="app__footer-list">
-                <li>{t.footerFeature1}</li>
-                <li>{t.footerFeature2}</li>
-                <li>{t.footerFeature3}</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="app__footer-title">{t.footerTechTitle}</h3>
-              <ul className="app__footer-list">
-                <li>React + Vite</li>
-                <li>Tailwind CSS</li>
-                <li>Marked + DOMPurify</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="app__footer-title">{t.footerInfoTitle}</h3>
-              <ul className="app__footer-list">
-                <li>v1.0</li>
-                <li>2026 © HEPAC</li>
-              </ul>
-            </div>
-          </div>
-          <div className="app__footer-bottom">
-            <p>{t.footerCopyright}</p>
-          </div>
-        </div>
-      </footer>
+      <Footer columns={footerColumns} copyright={t.footerCopyright} />
     </div>
   );
 }

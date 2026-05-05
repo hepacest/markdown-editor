@@ -1,4 +1,6 @@
-export default function MarkdownPreview({ htmlContent, title }) {
+import { forwardRef } from 'react';
+
+const MarkdownPreview = forwardRef(function MarkdownPreview({ htmlContent, title }, ref) {
   return (
     <div className="app__preview-panel">
       <div className="app__preview-header">
@@ -6,7 +8,7 @@ export default function MarkdownPreview({ htmlContent, title }) {
         <span className="app__preview-badge">RT</span>
       </div>
 
-      <div className="app__preview-content">
+      <div ref={ref} className="app__preview-content">
         <div
           className="prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -14,4 +16,6 @@ export default function MarkdownPreview({ htmlContent, title }) {
       </div>
     </div>
   );
-}
+});
+
+export default MarkdownPreview;

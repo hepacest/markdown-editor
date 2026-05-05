@@ -7,6 +7,7 @@ import MarkdownToolbar from './components/MarkdownToolbar';
 import PanelResizer from './components/PanelResizer';
 import useMarkdownPreview from './hooks/useMarkdownPreview.js';
 import usePanelResize from './hooks/usePanelResize.js';
+import useScrollSync from './hooks/useScrollSync.js';
 import es from './languages/es.js';
 import en from './languages/en.js';
 import { applyMarkdownInsertion } from './utils/markdownInsertion.js';
@@ -33,7 +34,9 @@ function App() {
   const [markdown, setMarkdown] = useState('');
   const textareaRef = useRef(null);
   const containerRef = useRef(null);
+  const previewScrollRef = useRef(null);
   const htmlContent = useMarkdownPreview(markdown);
+  useScrollSync(textareaRef, previewScrollRef);
   const {
     dividerPosition,
     isResizing,
@@ -97,7 +100,7 @@ function App() {
 
           <PanelResizer onMouseDown={startResizing} />
 
-          <MarkdownPreview htmlContent={htmlContent} title={t.previewTitle} />
+          <MarkdownPreview ref={previewScrollRef} htmlContent={htmlContent} title={t.previewTitle} />
         </div>
         </div>
       </main>

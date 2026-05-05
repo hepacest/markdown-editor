@@ -67,7 +67,7 @@ The application is implemented as a frontend-only React app.
 ### Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/hepacest/markdown-editor.git
 cd markdown-editor
 npm install
 ```

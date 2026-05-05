@@ -9,28 +9,12 @@
   user-select: none;
 }
 
-.app__header {
-  @apply bg-linear-to-r from-slate-800 to-slate-700 text-white shadow-lg;
-}
-
-.app__header-inner {
-  @apply max-w-7xl mx-auto px-10 py-6;
-}
-
-.app__title {
-  @apply text-3xl font-bold;
-}
-
-.app__subtitle {
-  @apply text-slate-300 text-sm mt-1;
-}
-
 .app__main {
-  @apply grow p-10;
+  @apply grow py-10 px-4;
 }
 
 .app__container {
-  @apply max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm;
+  @apply max-w-full mx-12 bg-white rounded-xl border border-slate-200 shadow-sm;
 }
 
 .app__layout {
@@ -125,45 +109,3 @@
   content: none;
 }
 
-.app__footer {
-  @apply bg-slate-900 text-slate-400 shadow-sm border-t border-slate-700;
-}
-
-.app__footer-inner {
-  @apply max-w-7xl mx-auto px-10 py-6;
-}
-
-.app__footer-grid {
-  @apply grid grid-cols-3 gap-8 mb-6;
-}
-
-.app__footer-title {
-  @apply text-white font-semibold mb-3;
-}
-
-.app__footer-list {
-  @apply text-sm space-y-1;
-}
-
-.app__footer-bottom {
-  @apply border-t border-slate-700 pt-4 text-center text-sm;
-}
-
-.app__lang-switch {
-  @apply mt-5 flex items-center gap-3 justify-end;
-}
-
-.app__lang-btn {
-  @apply inline-flex items-center justify-center rounded-full
-         border border-slate-300 bg-white/90
-         w-6 h-6 p-0.5
-         text-slate-900 shadow-sm transition hover:bg-slate-100;
-}
-
-.app__lang-btn--active {
-  @apply border-slate-800 bg-slate-100;
-}
-
-.app__flag-img {
-  @apply w-4 h-4 rounded-full object-cover;
-}

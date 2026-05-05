@@ -1,152 +1,165 @@
+# Markdown Viewer
 
-# Visor Markdown (React + Vite)
+Spanish version: [README.es.md](README.es.md)
 
-## English version
+Frontend-only web application for writing Markdown and previewing sanitized HTML in real time.
 
-A frontend-only web app that converts Markdown text into HTML with a live preview.
+## About The Project
 
-### What it does
+This repository contains a Markdown editor and live previewer built with React and Vite. The project aims to keep the editing flow simple while maintaining a structure that is easy to evolve and validate.
 
-- Converts Markdown to HTML.
-- Sanitizes generated HTML to prevent XSS.
-- Renders the result instantly in a preview panel.
-- Offers a toolbar to insert common Markdown syntax.
-- Allows resizing the editor and preview panels with a draggable divider.
-- Lets users switch the UI text between Spanish and English from the header.
+### Functional Requirements
 
-### Tech stack
+- Edit Markdown in a textarea.
+- Convert Markdown to HTML in real time.
+- Sanitize generated HTML before rendering it.
+- Provide a toolbar for common Markdown syntax.
+- Allow resizing between editor and preview panels.
+- Support English and Spanish interface labels.
 
-- React for UI.
-- Vite as bundler and dev server.
-- Tailwind CSS for styling.
-- `marked` for Markdown parsing.
-- `DOMPurify` for HTML sanitization.
-- ESLint for linting.
+### Non-Functional Requirements
 
-### Requirements
+- Fast response in modern browsers.
+- Frontend-only deployment.
+- Basic protection against XSS through HTML sanitization.
 
-- Node.js 18+ (20 recommended)
-- npm 9+
-- This project uses Node.js v25 and npm 11
+## Technical Stack
 
-### Install and run
+| Layer | Technology |
+|---|---|
+| UI | React 19 |
+| Bundler | Vite 8 |
+| Styling | Tailwind CSS 4 |
+| Markdown parsing | marked |
+| HTML sanitization | DOMPurify |
+| Linting | ESLint 9 |
 
-1. Clone repository:
-   ```bash
-   git clone <url-del-repo>
-   cd markdown-editor
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run dev server:
-   ```bash
-   npm run dev
-   ```
-4. Open browser:
-   - `http://localhost:5173`
+## Architecture And Logic
 
-### Production build
+The application is implemented as a frontend-only React app.
+
+- `src/main.jsx` boots the React application.
+- `src/App.jsx` orchestrates locale state and top-level composition.
+- `src/components/` contains reusable UI blocks for layout, editor, toolbar, preview, and resizer.
+- `src/hooks/` contains reusable React behavior.
+- `src/languages/` centralizes interface strings for Spanish and English.
+- `src/utils/` contains pure helper logic without React dependencies.
+- `public/flags/` stores static assets used by the language switcher.
+- `examples/` contains sample Markdown content for reference.
+- `design/` stores design artifacts and proposals.
+
+### Information Flow
+
+1. The user writes Markdown in the editor panel.
+2. React updates the editor state.
+3. `marked` converts Markdown to HTML.
+4. `DOMPurify` sanitizes the generated HTML.
+5. The preview panel renders the sanitized HTML.
+6. Header actions switch the current locale for UI strings.
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 20 recommended
+- npm 10 or newer recommended
+
+### Installation
+
+```bash
+git clone https://github.com/hepacest/markdown-editor.git
+cd markdown-editor
+npm install
+```
+
+### Environment Variables
+
+This project does not require a `.env` file for local execution.
+
+### Development
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+### Available Scripts
+
+```bash
+npm run dev
+npm run build
+npm run preview
+npm run lint
+npm run check
+```
+
+`npm run check` is the minimum validation routine for this project. It runs lint first and then the production build.
+
+### Production Build
 
 ```bash
 npm run build
 ```
 
-Build output will be in `dist`.
+The generated output is written to `dist`.
 
-### CI/CD
+## CI/CD
 
-This project includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that deploys the app to Vercel on every push to the `main` branch. The workflow:
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml` for deployment to Vercel.
+
+The workflow currently:
 
 - checks out the repository
 - installs Node.js 20
-- runs `npm install`
-- builds the project with `npm run build`
-- deploys to Vercel using `amondnet/vercel-action@v20`
-- uses the `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets
-- passes `--prod` to deploy a production build
+- installs dependencies with `npm install`
+- runs the production build with `npm run build`
+- deploys the application to Vercel using repository secrets
 
-### Resources
+## Project Structure
 
-- Vite: https://vitejs.dev/
-- React: https://react.dev/
-- Tailwind CSS: https://tailwindcss.com/
-
-
----
-## Versión en español
-
-
-Aplicación frontend que convierte texto Markdown a HTML con vista previa en tiempo real.
-
-### Qué hace
-
-- Convierte Markdown a HTML.
-- Sanitiza el HTML generado para prevenir XSS.
-- Muestra el resultado de inmediato en un panel de vista previa.
-- Incluye una barra de herramientas para insertar sintaxis Markdown común.
-- Permite redimensionar los paneles de editor y vista previa con un divisor arrastrable.
-- Permite cambiar los textos de la interfaz entre español e inglés desde el encabezado.
-
-### Tecnologías
-
-- React para la interfaz.
-- Vite como bundler y servidor de desarrollo.
-- Tailwind CSS para el estilo.
-- `marked` para parsear Markdown.
-- `DOMPurify` para sanitizar HTML.
-- ESLint para calidad de código.
-
-### Requisitos
-
-- Node.js 18+ (20 recomendado)
-- npm 9+
-- En el proyecto se usa Node.js v25 y npm 11
-
-### Instalación y ejecución
-
-1. Clona el repositorio:
-   ```bash
-   git clone <url-del-repo>
-   cd markdown-editor
-   ```
-2. Instala dependencias:
-   ```bash
-   npm install
-   ```
-3. Inicia el servidor de desarrollo:
-   ```bash
-   npm run dev
-   ```
-4. Abre en el navegador:
-   - `http://localhost:5173`
-
-### Build de producción
-
-```bash
-npm run build
+```text
+.
+├── design/               # Design proposals and visual artifacts
+├── docs/                 # Supporting project documentation
+├── examples/             # Sample Markdown files
+├── public/flags/         # Static assets for locale selector
+├── src/
+│   ├── components/       # Shared UI components
+│   ├── hooks/            # Reusable React hooks
+│   ├── languages/        # UI dictionaries
+│   ├── utils/            # Pure helper functions
+│   ├── App.jsx           # Main application composition and logic
+│   ├── index.css         # Global styles
+│   └── main.jsx          # React entry point
+├── eslint.config.js      # ESLint configuration
+├── index.html            # HTML entry document
+├── package.json          # Scripts and dependencies
+├── postcss.config.js     # PostCSS configuration
+├── tailwind.config.js    # Tailwind configuration
+└── vite.config.js        # Vite configuration
 ```
 
-El resultado se genera en `dist`.
+## Current Status
 
+The application is functional and buildable. The current implementation already follows a clearer separation between UI components, hooks, translations, and pure utilities.
 
-### CI/CD
+The expected pre-integration validation flow is `npm run check`.
 
-Este proyecto incluye un workflow de GitHub Actions en `.github/workflows/deploy.yml` que despliega la app a Vercel en cada push a la rama `main`. El workflow:
+## Notes For Maintenance
 
-- hace checkout del repositorio
-- instala Node.js 20
-- ejecuta `npm install`
-- construye el proyecto con `npm run build`
-- despliega a Vercel usando `amondnet/vercel-action@v20`
-- usa los secretos `VERCEL_TOKEN`, `VERCEL_ORG_ID` y `VERCEL_PROJECT_ID`
-- pasa `--prod` para desplegar una versión de producción
+- `src/components/` should contain presentational and UI composition pieces.
+- `src/hooks/` should contain React-specific reusable behavior.
+- `src/utils/` should contain pure helpers without React dependencies.
+- `src/languages/` should remain the single source of truth for interface strings.
+- Before merging structural or behavioral changes, run `npm run check`.
 
-
-### Recursos
+## Resources
 
 - Vite: https://vitejs.dev/
 - React: https://react.dev/
 - Tailwind CSS: https://tailwindcss.com/
+- Marked: https://marked.js.org/
+- DOMPurify: https://github.com/cure53/DOMPurify
+
 

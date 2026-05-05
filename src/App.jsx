@@ -1,117 +1,78 @@
-import { useState, useRef, useEffect } from 'react';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
-import es from "./languages/es";
-import en from "./languages/en";
+import { useState, useRef } from 'react';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import MarkdownEditor from './components/MarkdownEditor';
+import MarkdownPreview from './components/MarkdownPreview';
+import MarkdownToolbar from './components/MarkdownToolbar';
+import PanelResizer from './components/PanelResizer';
+import useMarkdownPreview from './hooks/useMarkdownPreview.js';
+import usePanelResize from './hooks/usePanelResize.js';
+import useScrollSync from './hooks/useScrollSync.js';
+import es from './languages/es.js';
+import en from './languages/en.js';
+import { applyMarkdownInsertion } from './utils/markdownInsertion.js';
 
 const translations = { es, en };
-
-
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-});
 
 function App() {
   const [locale, setLocale] = useState('es');
   const t = translations[locale];
+  const footerColumns = [
+    {
+      title: t.footerFeaturesTitle,
+      items: [t.footerFeature1, t.footerFeature2, t.footerFeature3],
+    },
+    {
+      title: t.footerTechTitle,
+      items: ['React + Vite', 'Tailwind CSS', 'Marked + DOMPurify'],
+    },
+    {
+      title: t.footerInfoTitle,
+      items: ['v1.0', '2026 © HEPAC'],
+    },
+  ];
   const [markdown, setMarkdown] = useState('');
-  const [htmlContent, setHtmlContent] = useState('');
-  const [dividerPosition, setDividerPosition] = useState(50); // porcentaje de ancho para editor
-  const [isResizing, setIsResizing] = useState(false);
   const textareaRef = useRef(null);
   const containerRef = useRef(null);
-
-
-  useEffect(() => {
-    const convertMarkdown = async () => {
-      if (markdown.trim()) {
-        try {
-          const rawHtml = await marked.parse(markdown);
-          const sanitized = DOMPurify.sanitize(rawHtml);
-          setHtmlContent(sanitized);
-        } catch (error) {
-          console.error('Error converting markdown:', error);
-          setHtmlContent('');
-        }
-      } else {
-        setHtmlContent('');
-      }
-    };
-    convertMarkdown();
-  }, [markdown]);
-
-  useEffect(() => {
-    if (!isResizing) return;
-
-    const onMouseMove = (event) => {
-      const container = containerRef.current;
-      if (!container) return;
-      const { left, width } = container.getBoundingClientRect();
-      const offset = event.clientX - left;
-      const next = Math.max(20, Math.min(80, (offset / width) * 100));
-      setDividerPosition(next);
-    };
-
-    const onMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [isResizing]);
+  const previewScrollRef = useRef(null);
+  const htmlContent = useMarkdownPreview(markdown);
+  useScrollSync(textareaRef, previewScrollRef);
+  const {
+    dividerPosition,
+    isResizing,
+    startResizing,
+  } = usePanelResize(containerRef);
 
   const insertText = (before, after = '') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = markdown.substring(start, end);
-    const newText = before + selectedText + after;
-    const newMarkdown = markdown.substring(0, start) + newText + markdown.substring(end);
-    setMarkdown(newMarkdown);
+    const { nextValue, selectionStart, selectionEnd } = applyMarkdownInsertion({
+      value: markdown,
+      selectionStart: textarea.selectionStart,
+      selectionEnd: textarea.selectionEnd,
+      before,
+      after,
+    });
+
+    setMarkdown(nextValue);
 
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
+      textarea.setSelectionRange(selectionStart, selectionEnd);
     }, 0);
   };
 
   return (
     <div className={`app${isResizing ? ' app--resizing' : ''}`}>
-      {/* Global Header */}
-      <header className="app__header">
-        <div className="app__header-inner">
-          <h1 className="app__title">{t.appTitle}</h1>
-          <p className="app__subtitle">{t.appSubtitle}</p>
-          <div className="app__lang-switch">
-            <button
-              type="button"
-              className={`app__lang-btn ${locale === 'en' ? 'app__lang-btn--active' : ''}`}
-              aria-label={t.ariaEnglish}
-              title="English"
-              onClick={() => setLocale('en')}
-            >
-              <img src="/flags/us.svg" alt="United States flag" className="app__flag-img" />
-            </button>
-            <button
-              type="button"
-              className={`app__lang-btn ${locale === 'es' ? 'app__lang-btn--active' : ''}`}
-              aria-label={t.ariaSpanish}
-              title="Español"
-              onClick={() => setLocale('es')}
-            >
-              <img src="/flags/co.svg" alt="Bandera de Colombia" className="app__flag-img" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header
+        title={t.appTitle}
+        subtitle={t.appSubtitle}
+        locale={locale}
+        ariaEnglish={t.ariaEnglish}
+        ariaSpanish={t.ariaSpanish}
+        onSelectLocale={setLocale}
+      />
 
       {/* Main Content */}
       <main className="app__main">
@@ -123,95 +84,28 @@ function App() {
           className="app__layout"
           style={{ '--editor-width': `${dividerPosition}%` }}
         >
-          {/* Editor Panel */}
           <div className="app__editor-panel">
-            {/* Editor Header */}
             <div className="app__editor-header">
               <h3 className="app__editor-title">{t.editorTitle}</h3>
             </div>
 
-            {/* Toolbar */}
-            <div className="app__toolbar">
-              <button onClick={() => insertText('**', '**')} className="app__toolbar-button app__toolbar-button--bold">B</button>
-              <button onClick={() => insertText('*', '*')} className="app__toolbar-button app__toolbar-button--italic">I</button>
-              <button onClick={() => insertText('# ')} className="app__toolbar-button app__toolbar-button--heading">H1</button>
-              <button onClick={() => insertText('## ')} className="app__toolbar-button app__toolbar-button--heading">H2</button>
-              <button onClick={() => insertText('> ')} className="app__toolbar-button">❝</button>
-              <button onClick={() => insertText('```\n', '\n```')} className="app__toolbar-button">⌨️</button>
-              <button onClick={() => insertText('- ')} className="app__toolbar-button">•</button>
-              <button onClick={() => insertText('1. ')} className="app__toolbar-button">1.</button>
-              <button onClick={() => insertText('[', '](url)')} className="app__toolbar-button">🔗</button>
-            </div>
-
-            {/* Editor Content */}
-            <textarea
+            <MarkdownToolbar onInsert={insertText} />
+            <MarkdownEditor
               ref={textareaRef}
               value={markdown}
-              onChange={(e) => setMarkdown(e.target.value)}
-              className="app__textarea"
+              onChange={setMarkdown}
               placeholder={t.textareaPlaceholder}
             />
           </div>
 
-          {/* Divider draggable */}
-          <div
-            onMouseDown={() => setIsResizing(true)}
-            className="app__divider"
-          />
+          <PanelResizer onMouseDown={startResizing} />
 
-          {/* Preview Panel */}
-          <div className="app__preview-panel">
-            {/* Preview Header */}
-            <div className="app__preview-header">
-              <h3 className="app__preview-title">{t.previewTitle}</h3>
-              <span className="app__preview-badge">RT</span>
-            </div>
-
-            {/* Preview Content */}
-            <div className="app__preview-content">
-              <div
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
-            </div>
-          </div>
+          <MarkdownPreview ref={previewScrollRef} htmlContent={htmlContent} title={t.previewTitle} />
         </div>
         </div>
       </main>
 
-      {/* Global Footer */}
-      <footer className="app__footer">
-        <div className="app__footer-inner">
-          <div className="app__footer-grid">
-            <div>
-              <h3 className="app__footer-title">{t.footerFeaturesTitle}</h3>
-              <ul className="app__footer-list">
-                <li>{t.footerFeature1}</li>
-                <li>{t.footerFeature2}</li>
-                <li>{t.footerFeature3}</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="app__footer-title">{t.footerTechTitle}</h3>
-              <ul className="app__footer-list">
-                <li>React + Vite</li>
-                <li>Tailwind CSS</li>
-                <li>Marked + DOMPurify</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="app__footer-title">{t.footerInfoTitle}</h3>
-              <ul className="app__footer-list">
-                <li>v1.0</li>
-                <li>2026 © HEPAC</li>
-              </ul>
-            </div>
-          </div>
-          <div className="app__footer-bottom">
-            <p>{t.footerCopyright}</p>
-          </div>
-        </div>
-      </footer>
+      <Footer columns={footerColumns} copyright={t.footerCopyright} />
     </div>
   );
 }

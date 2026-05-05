@@ -10,11 +10,11 @@
 }
 
 .app__main {
-  @apply grow p-10;
+  @apply grow py-10 px-4;
 }
 
 .app__container {
-  @apply max-w-7xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm;
+  @apply max-w-full mx-12 bg-white rounded-xl border border-slate-200 shadow-sm;
 }
 
 .app__layout {
